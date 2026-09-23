@@ -1,4 +1,4 @@
-# Fokker_challenge
+# smallest-one-point-basis
 
 The currently known smallest one-point bases[^5] for untyped lambda calculus, measured by Fokker size, have size 7.
 There are three such one-point bases of Fokker size 7.
@@ -134,6 +134,7 @@ each handled by a reusable criterion, plus a short list of hand-proved terms.
 | `rigid` → `rigid_not_basis` | `Decider/RigidHead.lean` | every abstraction block `λx₁…x_s. z M₁…M_k` has `k ≥ 1` and head `z` the innermost binder |
 | `tailOk` → `tailOk_not_basis` | `Decider/TailNotVar.lean` | every block has `k ≥ 1` arguments with a non-variable last argument (hence no η-redex) |
 | `noCompositive`, `is_combinator` | `Decider/CompositiveEffect.lean` | Curry's "no compositive effect": such terms cannot build `B` |
+| `is_combinator` → `isProperBody_lc_not_basis` | `Decider/CraigTheorem.lean` | Craig's theorem: a proper combinator (body an applicative combination of variables) is never a basis; no parentheses → no compositive effect (`B` unreachable), parentheses → argument-safe (`K` unreachable) |
 | `isNamedOfXY` → `isNamedOfXY_not_basis` | `TwoVarsAreNotEnough/*` | terms nameable with only two variable names, following Statman's *two variables are not enough*[^3]; proved here without extra hypotheses |
 | `closedNodeTwoVars` → `closedNodeTwoVars_not_basis` | `Decider/TwoVarsPerNode.lean` | at most two variables are used at every node of the term tree; the unused binders are then created by β-steps from `K`, so the term is a β-reduct of a two-name term — see [the section below](#the-two-variables-per-node-criterion) |
 | `BetaReductOfNamable` → `BetaReductOfNamable_not_basis` | `BetaCheck.lean`, `BetaNamableClosure.lean` | certificate: the term is a β-reduct of a two-name term |
@@ -280,6 +281,7 @@ the kernel does not reduce.
 ## Building
 
 ```
+lake update
 lake exe cache get   # Mathlib cache, pulled in via cslib
 lake build
 lake exe fokker_challenge
@@ -303,7 +305,6 @@ We use `native_decide` because `decide` can cause an OutOfMemoryError (OOM).
 
 1. Formalize only 3 basis of fokker size 7
 2. Formalize only 3 basis of blc size 26
-3. https://github.com/awesome-lambda-calculus/Fokker_challenge/issues/6
 
 ### Related papers
 
