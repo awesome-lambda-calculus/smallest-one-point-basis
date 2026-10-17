@@ -12,10 +12,8 @@ theorem foldl_union_replicate_empty {fs : Finset String} (n : ℕ) :
   | succ n ih =>
     simp [List.replicate_succ]
     rw [ih]
-    grind
 
-lemma union_foldl {l : List _} {fs : Finset String}:
-  fs ⊆ l.foldl Union.union fs := by
+lemma union_foldl {l : List _} {fs : Finset String}: fs ⊆ l.foldl (· ∪ ·) fs := by
   induction l generalizing fs with grind
 
 /-- Any member of `xs` is at most `xs.max?.getD d`, for any default `d`. -/

@@ -165,7 +165,7 @@ theorem beta_preserves_fvar: r_preserves_fvar Beta := by
   all_goals simp at hcfv
   all_goals rw [h]
   all_goals simp
-  any_goals omega
+  on_goal 2 => omega
   have h:= Nat.mul_le_mul g hcfv
   simp at h
   omega

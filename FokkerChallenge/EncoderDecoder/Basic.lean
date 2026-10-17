@@ -180,9 +180,9 @@ theorem decodeFuel_sound (fuel):
   any_goals tauto
   any_goals split at h
   any_goals tauto
-  any_goals split at h
-  any_goals tauto
-  any_goals cases h
+  on_goal 2 => split at h
+  on_goal 3 => tauto
+  all_goals cases h
   all_goals unfold encode
   all_goals grind
 

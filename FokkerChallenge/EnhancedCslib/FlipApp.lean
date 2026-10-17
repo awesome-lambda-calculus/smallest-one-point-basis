@@ -23,7 +23,7 @@ lemma steps_flip_app_l {R} {M M'} {Ns : List (Term String)} (steps : Relation.Re
   induction steps <;> grind [step_flip_app_l]
 
 lemma flip_app_fv {M} {Ns : List (Term String)}:
-  (Ns.foldl (flip app) M).fv = (Ns.map fv).foldl Union.union M.fv := by
+  (Ns.foldl (flip app) M).fv = (Ns.map fv).foldl (· ∪ ·) M.fv := by
     induction Ns generalizing M with
     | nil => grind
     | cons head tail ih =>

@@ -56,10 +56,10 @@ theorem count_bvar_openRec_fvar {x M} :
               simp [count_bvar, openRec]
               split <;> split
               any_goals subst M
-              any_goals subst j
-              any_goals omega
+              on_goal 1 => subst j
+              on_goal 1 => omega
               all_goals unfold count_bvar
-              any_goals omega
+              on_goal 1 => omega
               all_goals split
               all_goals tauto
   | app a b ha hb =>  intros i j h
@@ -106,15 +106,13 @@ theorem openRec_fv_union {M N} : (i: Nat) -> count_bvar i M > 0 -> (openRec i N 
                       have ga: count_bvar i a > 0 \/ count_bvar i a = 0 := by omega
                       have gb: count_bvar i b > 0 \/ count_bvar i b = 0 := by omega
                       cases ga <;> cases gb
-                      any_goals omega
+                      on_goal 4 => omega
                       all_goals rename_i ga gb
                       any_goals try specialize ha _ ga
                       any_goals try specialize hb _ gb
                       . rw [ha]
                         rw [hb]
                         simp
-                        apply congr
-                        all_goals simp
                       . rw [ha]
                         apply (@openRec_noop_of_count_bvar_zero _ N) at gb
                         rw [gb]
@@ -150,11 +148,11 @@ theorem count_bvar_preserved_under_open {M N} :
   | bvar M => intros i j
               simp [count_bvar, openRec]
               split
-              any_goals subst M
-              any_goals split
+              on_goal 1 => subst M
+              all_goals split
               all_goals intros
-              any_goals subst i
-              any_goals omega
+              on_goal 1 => subst i
+              on_goal 1 => omega
               . unfold count_bvar
                 simp
               . symm

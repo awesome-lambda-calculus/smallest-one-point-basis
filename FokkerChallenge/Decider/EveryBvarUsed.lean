@@ -125,7 +125,7 @@ theorem xi_preserves_free_vars {R}: r_preserves_free_vars R -> r_preserves_free_
                     simp at g
                     rw [openRec_fv_union, openRec_fv_union] at ih
                     simp at ih
-                    any_goals omega
+                    on_goal 3 => omega
                     apply subset_antisymm
                     . rw [<- Finset.insert_subset_insert_iff]
                       apply superset_of_eq
@@ -164,7 +164,7 @@ theorem xi_preserves_every_bvar_used {R: Term String → Term String → Prop} :
                     . apply open_every_bvar_used <;> grind
                     . have g : count_bvar 0 N > 0 \/ count_bvar 0 N = 0 := by omega
                       cases g
-                      any_goals assumption
+                      on_goal 1 => assumption
                       exfalso
                       have ⟨y, hy⟩ := fresh_exists <| free_union [fv] String
                       have h4 := h x (by grind)

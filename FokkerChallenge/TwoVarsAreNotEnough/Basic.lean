@@ -30,7 +30,7 @@ def two_vars_are_enough: Term String → Bool
 theorem two_vars_are_enough_lc {t} (g : two_vars_are_enough t) : t.abs.abs.LC := by
   rw [<- lcAt_iff_LC]
   induction h : t.fokker_size using Nat.strong_induction_on generalizing t with
-  | h n ih => cases t with
+  | ind n ih => cases t with
   | fvar => grind
   | bvar => grind
   | app => grind
@@ -46,7 +46,8 @@ theorem two_vars_are_enough_depth {M N1 N2: Term String}
   (hm : M.two_vars_are_enough)
   (h1 : N1.LC) (h2 : N2.LC) :
   M⟦1 ↝ N1⟧⟦0 ↝ N2⟧.depth <= M.depth.max (N1.depth.max N2.depth) := by
-  induction h : M.fokker_size using Nat.strong_induction_on generalizing M with | h n ih =>
+  induction h : M.fokker_size using Nat.strong_induction_on generalizing M with
+  | ind n ih =>
   cases M with
   | fvar _ => grind
   | bvar _ => grind
@@ -60,7 +61,7 @@ theorem two_vars_are_enough_depth {M N1 N2: Term String}
 @[scoped grind =]
 theorem two_vars_are_enough_fv {t} (h: two_vars_are_enough t) : t.fv = ∅ := by
   induction h : t.fokker_size using Nat.strong_induction_on generalizing t with
-    | h n _ => cases t with
+    | ind n _ => cases t with
   | bvar _ => grind
   | fvar _ => grind
   | app _ _ => grind

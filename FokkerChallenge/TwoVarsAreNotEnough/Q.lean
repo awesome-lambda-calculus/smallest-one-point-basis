@@ -41,7 +41,7 @@ theorem closed_under_app_Q {M t N1 N0}
   (h1: ClosedUnderApp (Q M) N1)
   (hlc: N1.LC) :
   ClosedUnderApp (Q M) (t⟦1 ↝ N1⟧⟦0 ↝ N0⟧) := by
-  induction h : t.fokker_size using Nat.strong_induction_on generalizing t with | h n ih => cases t with
+  induction h : t.fokker_size using Nat.strong_induction_on generalizing t with | ind n ih => cases t with
   | fvar => grind
   | bvar a => have h : a = 0 \/ a = 1 := by grind
               cases h <;> subst_vars
@@ -281,12 +281,9 @@ theorem closedUnderApp_q_of_foldl_app (y) {M N a l}
                           simp at h
                           exfalso
                           apply h2
-                          apply h
-                          simp
-                          right
                           grind
                         . grind
-  | append_singleton l a _ =>
+  | append_singleton l tail _ =>
       rw [<- List.cons_append, List.foldl_concat] at h
       cases h with
       | app _ _ => grind
@@ -296,12 +293,12 @@ theorem closedUnderApp_q_of_foldl_app (y) {M N a l}
                     simp at h
                     exfalso
                     apply h2
-                    apply h
-                    simp
-                    left
-                    rw [multiapp_fv]
-                    apply union_foldl
-                    grind
+                    have hy_seed : y ∈ (N.app a).fv := by
+                      simp [fv]
+                      exact Or.inr h1
+                    have hy : y ∈ (List.foldl app (N.app a) l).fv :=
+                      fv_head_subset_foldl l (N.app a) hy_seed
+                    exact h.1 hy
                   . grind
 
 /-

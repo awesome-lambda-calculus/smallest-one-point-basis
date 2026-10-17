@@ -81,7 +81,7 @@ theorem head_multiapp (f a b: Term String) (l) :
 
 theorem head_fvar {l : List (Term String)} {M : Term String} {x : String} :
   l.foldl Term.app (fvar x) ⭢𝒽 M -> False := by
-  induction h : l.length using Nat.strong_induction_on generalizing M l with | h n ih =>
+  induction h : l.length using Nat.strong_induction_on generalizing M l with | ind n ih =>
   intros g
   cases (List.eq_nil_or_concat' l) with
   | inl h =>  subst_vars
@@ -132,7 +132,7 @@ theorem foldl_multiapp_cases {f M : Term String} {l : List (Term String)}
   (∃ a b l' f', l = b :: l'      /\ f = f'.abs.abs.app a /\ M = l'.foldl app (f'⟦1 ↝ a⟧⟦0 ↝ b⟧)) \/
   (∃ a b l' f', l = a :: b :: l' /\ f = f'.abs.abs       /\ M = l'.foldl app (f'⟦1 ↝ a⟧⟦0 ↝ b⟧))
   := by
-  induction h : l.length using Nat.strong_induction_on generalizing M l f with | h n ih =>
+  induction h : l.length using Nat.strong_induction_on generalizing M l f with | ind n ih =>
   cases l with
   | nil => grind
   | cons head l =>
@@ -155,7 +155,8 @@ theorem HeadReduction2_preserver_fvar_or_combinator {M N : Term String}
   (hmn : HeadReduction2 M N):
   ClosedUnderApp fvar_or_combinator N := by
   induction hmn with
-  | appL _ _ => grind
+  | appL _ _ => refine .app (by grind) ?_
+                cases hm <;> grind
   | base => cases hm with
   | base _ => grind
   | app hm _ => cases hm with

@@ -67,7 +67,7 @@ theorem exists_head_reduction_to_fvar_app {M N x}
 theorem no_reduction_to_Hn_with_depth_bound_U {n M}
   (hm : ClosedUnderApp (U n "y" "x") M)
   (steps : M ↠βηᶠ (fvar "x").app ((fvar "y").app (H n))) : False := by
-  induction n using Nat.strong_induction_on generalizing M with | h n ih =>
+  induction n using Nat.strong_induction_on generalizing M with | ind n ih =>
   obtain ⟨l, i, N, h, steps⟩ := exists_head_reduction_to_fvar_app (closedunderapp_derive2 U_le_fvar_or_combinator _ hm) (by rw [exists_beta_normal_fvar_app_of_beta_eta]; apply normal_H) steps
   have hn := HeadReduction2_steps_preserve_closedUnderApp_U h (U_replicate hm)
   apply U_foldl_z at hn

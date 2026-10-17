@@ -17,7 +17,7 @@ def subterms : Term String -> List (Term String)
 theorem subterms_subset {t : Term String} :
     ∀ s ∈ t.subterms, s.subterms ⊆ t.subterms := by
   induction h : t.fokker_size using Nat.strong_induction_on generalizing t with
-  | h n _ => cases t with (simp_all; try subst_vars)
+  | ind n _ => cases t with simp_all
   | app _ _ => grind
   | abs t => cases t with simp_all
     | abs _ => grind
@@ -25,7 +25,7 @@ theorem subterms_subset {t : Term String} :
 theorem subterms_size {t} :
     ∀ s ∈ subterms t, s.fokker_size <= t.fokker_size := by
   induction h : t.fokker_size using Nat.strong_induction_on generalizing t with
-  | h n _ => cases t with (simp_all; try subst_vars)
+  | ind n _ => cases t with simp_all
   | app _ _ => grind
   | abs t => cases t with simp_all
     | abs _ => grind
@@ -33,7 +33,7 @@ theorem subterms_size {t} :
 theorem subterms_fv {t} (h : t.fv = ∅) :
     ∀ s ∈ subterms t, s.fv = ∅ := by
     induction h : t.fokker_size using Nat.strong_induction_on generalizing t with
-    | h n _ => cases t with  (simp_all; try subst_vars)
+    | ind n _ => cases t with simp_all
       | app _ _ => grind
       | abs t => cases t with simp_all
         | abs _ => grind
@@ -41,7 +41,7 @@ theorem subterms_fv {t} (h : t.fv = ∅) :
 theorem subterms_preserved_under_openRec {x i t} (h : two_vars_are_enough t) :
     t.subterms = t⟦i ↝ fvar x⟧.subterms := by
     induction h : t.fokker_size using Nat.strong_induction_on generalizing t with
-    | h n _ => cases t with
+    | ind n _ => cases t with
     | bvar _ => grind
     | fvar _ => grind
     | app _ _ => grind
@@ -50,7 +50,7 @@ theorem subterms_preserved_under_openRec {x i t} (h : two_vars_are_enough t) :
 theorem subterms_two_vars_are_enough {t} (h : two_vars_are_enough t) :
     ∀ s ∈ subterms t, abs_two_vars_are_enough s := by
     induction h : t.fokker_size using Nat.strong_induction_on generalizing t with
-    | h n _ => cases t with (simp_all; try subst_vars)
+    | ind n _ => cases t with simp_all
       | app _ _ => grind
       | abs t => cases t with simp_all
         | abs _ => grind
@@ -61,7 +61,7 @@ theorem two_vars_are_enough_subterms_lc {t} (h : two_vars_are_enough t) :
 theorem subterms_closedunderappbool {t} (h : ClosedUnderAppBool abs_two_vars_are_enough t) :
     ∀ s ∈ subterms t, abs_two_vars_are_enough s := by
     induction h : t.fokker_size using Nat.strong_induction_on generalizing t with
-    | h n _ => cases t with (simp_all; try subst_vars)
+    | ind n _ => cases t with simp_all
       | app _ _ => grind
       | abs t => cases t with simp_all
         | abs _ => grind [subterms_two_vars_are_enough]
@@ -69,7 +69,8 @@ theorem subterms_closedunderappbool {t} (h : ClosedUnderAppBool abs_two_vars_are
 theorem closedUnderAppBool_genfinset_subterms {t}
     (h : ClosedUnderAppBool abs_two_vars_are_enough t) :
     GenFinset t.subterms t := by
-  induction ht : t.fokker_size using Nat.strong_induction_on generalizing t with | h n ih =>
+  induction ht : t.fokker_size using Nat.strong_induction_on generalizing t with
+  | ind n ih =>
   cases t with
   | bvar _ => cases h
   | fvar _ => cases h
@@ -77,17 +78,3 @@ theorem closedUnderAppBool_genfinset_subterms {t}
   | app x y =>  have hx := @ih x.fokker_size (by grind) x (by grind) rfl
                 have hy := @ih y.fokker_size (by grind) y (by grind) rfl
                 refine .app (genfinset_subset (by grind) hx) (genfinset_subset (by grind) hy)
-
-/-
-@[scoped grind =]
-def idempotent (terms : Finset (Term String)) : Prop :=
-  terms.biUnion subterms = terms
-
-theorem subterms_idempotent {t : Term String} : idempotent t.subterms := by
-    induction h : t.fokker_size using Nat.strong_induction_on generalizing t with
-    | h n _ => cases t with
-    | bvar _ => grind
-    | fvar _ => grind
-    | app _ _ => grind
-    | abs t => cases t with grind
--/
